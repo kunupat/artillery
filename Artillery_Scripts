@@ -1,0 +1,56 @@
+config:
+  target: 'https://reqres.in'
+  phases:
+    - duration: 120
+      arrivalRate: 20
+      pause: 10
+    - duration: 60
+      arrivalRate: 20
+
+scenarios:
+  - flow:
+    - post:
+        url: "/api/register"
+        json:
+          email: "test@test.com"
+          password: "asdsad"
+
+############################################
+
+config:
+  target: 'https://reqres.in'
+  phases:
+    - duration: 60
+        arrivalCount: 1200
+
+scenarios:
+  - flow:
+    - post:
+        url: "/api/users"
+        json:
+          name: "asds"
+          job: "asdsad"
+        capture:
+          json: "$.id"
+          as: "id"
+    - log: "Id value: {{ id }}"
+
+############################################
+#Create 20 virtual users in 60 seconds( one every 2 seconds on average) to perform GET request for searching user id 3. 
+#Each user should perform this action for 10 times each.
+
+config:
+  target: 'https://reqres.in'
+  phases:
+    - duration: 60
+      arrivalCount: 30
+
+scenarios:
+  - flow:
+      - loop: 
+          - get:
+              url: "/api/users/3"
+        count: 10
+
+############################################
+
