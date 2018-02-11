@@ -1,0 +1,23 @@
+#Create 10 virtual users every second on an average for 1 minutes, perform post request to create user details and print the new ID created for each user name using Debug option.
+
+#artillery run -e debug test.yml -o output.txt
+
+config:
+  environments:
+    debug:
+      target: 'https://reqres.in'
+      phases:
+        - duration: 60
+          arrivalCount: 10
+
+scenarios:
+  - flow:
+    - post:
+        url: "/api/users"
+        json:
+          name: "asds"
+          job: "asdsad"
+        capture:
+          json: "$.id"
+          as: "id"
+    - log: "{{ id }}"
