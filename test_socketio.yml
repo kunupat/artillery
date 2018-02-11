@@ -1,0 +1,38 @@
+#Create ramp up arrival rate from 10 to 20 over 1 minutes for creating the user account. Define the variable request URL, name and job in the Inline variable. Search the newly created user using ID. Use reqres application as base URL and request URL.
+
+#
+
+config:
+  target: 'https://reqres.in'
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      rampTo: 20
+  variables:
+    name:
+      - "abc"
+      - "pqr"
+    job: 
+      - "abc"
+      - "pqr"
+    requrl:
+      - "/api/users"
+
+scenarios:
+  - engine: "socketio"
+  - flow:
+    - post:
+        url: "{{ requrl }}"
+        json:
+          name: "{{ name }}"
+          job: "{{ job }}"
+        capture:
+          json: "$.id"
+          as: "id"
+    - emit:
+        channel: "search/"
+        data: "{{ id }}"
+  - flow:
+      - get:
+          url: "/api/users/{{ id }}"
+ 
